@@ -8,7 +8,7 @@ class handDetector():
     def __init__(self,
         static_image_mode=False,
         max_num_hands=2,
-        min_detection_confidence=0.5, ultra_mode=True):
+        min_detection_confidence=0.5, ultra_mode=False):
         
         self.static_image_mode=static_image_mode
         self.max_num_hands = max_num_hands
@@ -52,13 +52,21 @@ cap = cv2.VideoCapture(0)
         
 if __name__ == "__main__":
     now_time = time()
-    p_time = time()
+    p_time = 0
+    
     
     hand_detector = handDetector()
     
     while True:
         success, img = cap.read()
         hand_detector.findHands(img)
+        
+        now_time = time()
+        fps = 1/(now_time - p_time)
+        p_time = now_time
+        
+        cv2.putText(img, str(int(fps)), (66, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 2)
+        
         cv2.imshow("Image", img)
         cv2.waitKey(1)
     
