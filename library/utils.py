@@ -1,10 +1,17 @@
 import cv2
 import mediapipe as mp
-from time import time
-from library.utils import handDetector
 
 
-class handDetector1():
+
+def setCamera():
+    camera_id = 2
+    return camera_id
+
+
+
+
+
+class handDetector():
     def __init__(self,
         static_image_mode=False,
         max_num_hands=2,
@@ -40,36 +47,17 @@ class handDetector1():
 
                 self.mpDraw.draw_landmarks(img, landmarks, self.mp_hands.HAND_CONNECTIONS)    
 
-
-
-
-cap = cv2.VideoCapture(2)
-
-
-
-
-
-    
+    def findHandPosition(self, img, point=0):
+        results = self.hands.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        h, w, c = img.shape
         
-if __name__ == "__main__":
-    now_time = time()
-    p_time = 0
-    
-    
-    hand_detector = handDetector()
-    
-    while True:
-        success, img = cap.read()
-        hand_detector.findHands(img)
-        
-        now_time = time()
-        fps = 1/(now_time - p_time)
-        p_time = now_time
-        
-        cv2.putText(img, str(int(fps)), (66, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 2)
-        
-        cv2.imshow("Image", img)
-        cv2.waitKey(1)
-    
-    
-    
+        if results.multi_hand_landmarks:
+            for landmarks in results.multi_hand_landmarks:
+
+                for ldmk_id, ldm in enumerate(landmarks.landmark):
+                    if ldmk_id == point:
+                        return ldm.x, ldm.y
+        else:
+            return 0, 0
+
+               

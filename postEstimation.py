@@ -8,7 +8,7 @@ pose = mpPose.Pose()
 mpDraw = mp.solutions.drawing_utils
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 def drawBodyPart(ldmk, w, h):
     cx, cy = int(ldmk.x * w), int(ldmk.y * h)
